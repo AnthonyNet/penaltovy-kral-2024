@@ -2,7 +2,9 @@ import React from 'react'
 
 type Props = {
 	stats: {
-		[key: string]: number;
+		totalPlayers: number;
+		restPlayers: number;
+		round: string;
 	}
 }
 

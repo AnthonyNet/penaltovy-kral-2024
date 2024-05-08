@@ -2,15 +2,19 @@ import React from "react";
 import Player from "./Player";
 
 interface Props {
-	stats: {
-		stats: Record<number, number>;
-		shooters: Record<string, string>;
-		nextPlayers: Record<string, string>;
-	};
-	loading: boolean;
+	players: PlayerProps[];
+	nextPlayers: PlayerProps[];
+	
 }
 
-const Players = ({stats, loading}:Props) => {
+interface PlayerProps {
+	id: string;
+	name: string;
+	startNumber: number;
+	lives: number;
+}
+
+const Players = ({players, nextPlayers}:Props) => {
 
 	return (
 		<section className="flex flex-col justify-between w-full h-[60%] text-2xl font-semibold">
@@ -18,21 +22,23 @@ const Players = ({stats, loading}:Props) => {
 				Aréna:
 			</h2>
 
-			{!loading &&
-				Object.values(stats.shooters).map((shooter:any) => (
+			{
+				Object.values(players).map((player:any) => (
 					<Player
-						key={shooter.id}
-						name={shooter.name}
-						number={shooter.startNumber}
+						key={player.id}
+						name={player.name}
+						number={player.startNumber}
+						lives={player.lives}
+						
 					/>
 				))}
 
 			<h2 className="text-center bg-gradient-to-r from-[#11193a] to-[#36457a] font-bold text-white py-1">
 				Připraví se:
 			</h2>
-			{!loading&&
-				Object.values(stats.nextPlayers).map((nextPlayer:any) => (
-					<Player key={nextPlayer.id} name={nextPlayer.name} number={nextPlayer.startNumber} />
+			{
+				Object.values(nextPlayers).map((nextPlayer:any) => (
+					<Player key={nextPlayer.id} name={nextPlayer.name} number={nextPlayer.startNumber} lives={nextPlayer.lives} />
 			))}
 		</section>
 	);

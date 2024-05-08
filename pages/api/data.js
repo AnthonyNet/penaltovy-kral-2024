@@ -1,8 +1,15 @@
+import { log } from "console";
 import { GoogleSpreadsheet } from "google-spreadsheet";
+import { clouddebugger } from "googleapis/build/src/apis/clouddebugger";
+import { LucideGripHorizontal } from "lucide-react";
 
 export default async function totalPlayers(req, res) {
+	
+
 	const doc = new GoogleSpreadsheet(
-		"1s6GBtj7ItUPdbnYUGZ7ghzAtbwCO-PKU4RqivCXdotI"
+		//"1s6GBtj7ItUPdbnYUGZ7ghzAtbwCO-PKU4RqivCXdotI"
+		"1J0Lnno7WW2rIM9MAJGervLgzE7VjO0O4rVdMqYppj60"
+		
 	);
 	doc.useApiKey("AIzaSyBP6A-1rMWSR2Oi2maHP0KIk73Nn5_Psbc");
 	await doc.loadInfo(); // Přepnuli jsme z getInfo() na loadInfo()
@@ -12,7 +19,7 @@ export default async function totalPlayers(req, res) {
 	*/
 
 	const checkCellValues = (cell) => {
-		!cell.value ? "" : cell.value.split("");
+		!cell.value ? "" : cell.value;
 		if (
 			!cell.value ||
 			cell.value === "" ||
@@ -21,96 +28,107 @@ export default async function totalPlayers(req, res) {
 		) {
 			return ["", ""];
 		}
-		return cell.value.split(". ");
+		return cell.value;
 	};
 
-	// Select menu on list 2 VYBRAT_KATEGORII
-	//Sends number of chosen list
-	let vyberList = doc.sheetsByIndex[2];
-	await vyberList.loadCells("C2:D2");
-
+	const listIndex = doc.sheetsByIndex[3];
+	await listIndex.loadCells("C2:D2");
 	// list = index of list in google sheets
-	const list = vyberList.getCellByA1("D2");
-	const category = vyberList.getCellByA1("C2");
+	const activeList = listIndex.getCellByA1("D2");
+	const category = listIndex.getCellByA1("C2");
 
-	//Data for Stats.tsx component
-	const index = doc.sheetsByIndex[list.value];
-	await index.loadCells("A3:C3");
+	const index = doc.sheetsByIndex[activeList.value];
+	await index.loadCells("A1:A6");
+	await index.loadCells("C2:W3");
 
-	// Save data into variables
-	const totalPlayers = index.getCellByA1("A3");
-	const restPlayers = index.getCellByA1("B3");
-	const round = index.getCellByA1("C3");
+	const player_1_number = checkCellValues(index.getCellByA1("C2"));
+	const player_2_number = checkCellValues(index.getCellByA1("C3"));
+	const player_3_number = checkCellValues(index.getCellByA1("F2"));
+	const player_4_number = checkCellValues(index.getCellByA1("F3"));
+	const player_5_number = checkCellValues(index.getCellByA1("I2"));
+	const player_6_number = checkCellValues(index.getCellByA1("I3"));
+	const player_7_number = checkCellValues(index.getCellByA1("L2"));
+	const player_8_number = checkCellValues(index.getCellByA1("L3"));
 
-	//Select players for ARENA
-	//const arena = doc.sheetsByIndex[list.value];
-	await index.loadCells("AF3:AG4");
+	const player_1_name = checkCellValues(index.getCellByA1("D2"));
+	const player_2_name = checkCellValues(index.getCellByA1("D3"));
+	const player_3_name = checkCellValues(index.getCellByA1("G2"));
+	const player_4_name = checkCellValues(index.getCellByA1("G3"));
+	const player_5_name = checkCellValues(index.getCellByA1("J2"));
+	const player_6_name = checkCellValues(index.getCellByA1("J3"));
+	const player_7_name = checkCellValues(index.getCellByA1("M2"));
+	const player_8_name = checkCellValues(index.getCellByA1("M3"));
 
-	// Check what data exact cell returns
-	const shooter_1 = index.getCellByA1("AG3");
-	const shooter_2 = index.getCellByA1("AG4");
+	const player_1_lives = checkCellValues(index.getCellByA1("P2"));
+	const player_2_lives = checkCellValues(index.getCellByA1("P3"));
+	const player_3_lives = checkCellValues(index.getCellByA1("R2"));
+	const player_4_lives = checkCellValues(index.getCellByA1("R3"));
+	const player_5_lives = checkCellValues(index.getCellByA1("T2"));
+	const player_6_lives = checkCellValues(index.getCellByA1("T3"));
+	const player_7_lives = checkCellValues(index.getCellByA1("V2"));
+	const player_8_lives = checkCellValues(index.getCellByA1("V3"));
 
-	await index.loadCells("AI3:AL5");
-
-	//Select cells for PRIPRAVI-SE
-	const nextPlayer1 = index.getCellByA1("AJ3");
-	const nextPlayer2 = index.getCellByA1("AJ4");
-	const nextPlayer3 = index.getCellByA1("AJ5");
-	const nextPlayer4 = index.getCellByA1("AK3");
-	const nextPlayer5 = index.getCellByA1("AK4");
-	const nextPlayer6 = index.getCellByA1("AK5");
-
-	// export a JSON object with the data we need
-	res.status(200).json({
-		category: category.value,
+	// Fake the res.status(200).json() response
+    res.status(200).json({
+		category: checkCellValues(listIndex.getCellByA1("C2")),
 		stats: {
-			totalPlayers: totalPlayers.value,
-			restPlayers: restPlayers.value,
-			round: round.value,
-		},
-		shooters: [
+			totalPlayers: index.getCellByA1("A2").value,
+			restPlayers: index.getCellByA1("A4").value,
+			round: index.getCellByA1("A6").value.split(".")[0],
+		}, 
+		players: [ 
 			{
 				id: crypto.randomUUID(),
-				startNumber: checkCellValues(shooter_1)[0],
-				name: checkCellValues(shooter_1)[1],
+				startNumber: player_1_number,
+				name: player_1_name,
+				lives: player_1_lives
 			},
 			{
 				id: crypto.randomUUID(),
-				startNumber: checkCellValues(shooter_2)[0],
-				name: checkCellValues(shooter_2)[1],
+				startNumber: player_2_number,
+				name: player_2_name,
+				lives: player_2_lives
 			},
 		],
 		nextPlayers: [
 			{
 				id: crypto.randomUUID(),
-				startNumber: checkCellValues(nextPlayer1)[0],
-				name: checkCellValues(nextPlayer1)[1],
+				startNumber: player_3_number,
+				name: player_3_name,
+				lives: player_3_lives
 			},
 			{
 				id: crypto.randomUUID(),
-				startNumber: checkCellValues(nextPlayer2)[0],
-				name: checkCellValues(nextPlayer2)[1],
+				startNumber: player_4_number,
+				name: player_4_name,
+				lives: player_4_lives
 			},
 			{
 				id: crypto.randomUUID(),
-				startNumber: checkCellValues(nextPlayer3)[0],
-				name: checkCellValues(nextPlayer3)[1],
+				startNumber: player_5_number,
+				name: player_5_name,
+				lives: player_5_lives
 			},
 			{
 				id: crypto.randomUUID(),
-				startNumber: checkCellValues(nextPlayer4)[0],
-				name: checkCellValues(nextPlayer4)[1],
+				startNumber: player_6_number, 
+				name: player_6_name,
+				lives: player_6_lives
 			},
 			{
 				id: crypto.randomUUID(),
-				startNumber: checkCellValues(nextPlayer5)[0],
-				name: checkCellValues(nextPlayer5)[1],
+				startNumber: player_7_number, 
+				name: player_7_name,
+				lives: player_7_lives
 			},
 			{
 				id: crypto.randomUUID(),
-				startNumber: checkCellValues(nextPlayer6)[0],
-				name: checkCellValues(nextPlayer6)[1],
+				startNumber: player_8_number,
+				name: player_8_name,
+				lives: player_8_lives
 			},
 		],
 	});
+
+	
 }
