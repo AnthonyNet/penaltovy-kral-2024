@@ -4,7 +4,7 @@ import Aside from "../components/Aside";
 const samostatne = () => {
   return (
 		<div className="h-screen w-screen">
-			<Aside width={"max-w-[450px]"}/>
+			<Aside width={"max-w-[550px]"}/>
 		</div>
 	);
 }

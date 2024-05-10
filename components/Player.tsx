@@ -8,13 +8,13 @@ type Props = {
 }
 
 const NextPlayers = ({name, number, lives}:Props) => {
-
+	
 	const icons = (() => {
 		switch (lives) {
 			case 3:
 				return (
 					<>
-						<span className='border-2 text-white bg-red-500 rounded-full h-10 w-10'>V</span>
+						<span className='border-2 border-red-300 text-white bg-red-500 rounded-full h-10 w-10'>V</span>
 						<Image src={heart} alt="heart" width={30} />
 						<Image src={heart} alt="heart" width={30} />
 					</>
@@ -33,7 +33,7 @@ const NextPlayers = ({name, number, lives}:Props) => {
 					</>
 				);
 			default:
-				return <>Data</>;
+				return <>{""}</>;
 		}
 	})();
 

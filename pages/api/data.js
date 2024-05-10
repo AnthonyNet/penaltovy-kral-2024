@@ -31,11 +31,10 @@ export default async function totalPlayers(req, res) {
 		return cell.value;
 	};
 
-	const listIndex = doc.sheetsByIndex[3];
+	const listIndex = doc.sheetsByIndex[2];
 	await listIndex.loadCells("C2:D2");
 	// list = index of list in google sheets
 	const activeList = listIndex.getCellByA1("D2");
-	const category = listIndex.getCellByA1("C2");
 
 	const index = doc.sheetsByIndex[activeList.value];
 	await index.loadCells("A1:A6");
