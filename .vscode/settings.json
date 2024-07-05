@@ -1,3 +1,6 @@
 {
-  "conventionalCommits.scopes": ["components"]
+  "conventionalCommits.scopes": [
+    "components",
+    "components, data.js"
+  ]
 }
